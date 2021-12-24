@@ -1,0 +1,29 @@
+name: Linux CI
+
+on:
+  push:
+    branches:
+    - v2021-algebraic
+  pull_request:
+    branches:
+    - v2021-algebraic
+
+jobs:
+  build-gcc10:
+    runs-on: ubuntu-latest
+    name: GNU GCC 10
+    
+    steps:
+    - uses: actions/checkout@v1
+      with:
+        submodules: true
+    - name: Build mockturtle
+      run: |
+        mkdir build
+        cd build
+        cmake -DCMAKE_CXX_COMPILER=g++-10 -DMOCKTURTLE_TEST=ON ..
+        make run_tests
+    - name: Run tests
+      run: |
+        cd build
+        ./test/run_tests "[aig_algebraic_rewriting]"
